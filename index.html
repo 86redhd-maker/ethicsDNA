@@ -87,11 +87,24 @@
             line-height: 1.5;
         }
 
+        /* 데스크탑(마우스, 정밀 포인터)에서만 hover 활성화 */
+        @media (hover: hover) and (pointer: fine) {
         .choice-btn:hover {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-color: #667eea;
             transform: translateX(5px);
+        }
+        }
+
+        /* 터치 기기에서는 애니메이션 최소화(선택) */
+        @media (hover: none) {
+        .choice-btn:active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
         }
 
         .back-btn {
@@ -1315,3 +1328,4 @@
     </script>
 </body>
 </html>
+
