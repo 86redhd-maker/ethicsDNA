@@ -936,6 +936,7 @@
                         philosopher: "rawls",
                         explanation: "공적-사적 영역의 합리적 구분을 추구한 롤스의 정치철학"
                     }
+                ]
             },
             {
                 question: "🏛️ 코로나 이후 더 강화된 방역을 위해 정부가 개인 방역 드론을 허용했습니다. 시민들이 개인적으로 드론을 운영해서 주변 사람들의 마스크 착용, 거리두기 등을 감시할 수 있게 된 거죠. 한 아파트에서 A씨가 드론을 띄워 이웃들의 베란다와 창문을 촬영하며 우리 모두의 안전을 위한 것이라고 주장했지만, 이웃들은 사생활 침해라며 항의하고 있어요.",
@@ -1261,7 +1262,7 @@
         let choices = [];
         let gameStarted = false;
 
-        function startGame() {
+        window.startGame = function() {
             document.getElementById('main-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');
             currentDilemma = 0;
@@ -1599,4 +1600,5 @@
     </script>
 </body>
 </html>
+
 
