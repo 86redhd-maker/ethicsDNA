@@ -569,6 +569,13 @@
                     다른 선택지들은 어떤 철학자의 관점인지도 알아볼 수 있어요!
                 </p>
                 <div class="my-choices" id="my-choices"></div>
+            }
+                <h3 style="margin-bottom: 15px; color: #2d3748;">📚 당신의 선택을 다시 살펴볼까요?</h3>
+                <p style="margin-bottom: 20px; color: #4a5568; line-height: 1.5;">
+                    각 딜레마에서 당신이 선택한 답변과 그 철학적 배경을 확인해보세요. 
+                    다른 선택지들은 어떤 철학자의 관점인지도 알아볼 수 있어요!
+                </p>
+                <div class="my-choices" id="my-choices"></div>
             </div>
 
             <div class="share-section">
@@ -1094,6 +1101,9 @@
             // DNA strand 시각화
             showDNAStrand(counts);
             
+            // 다른 철학자 탐색 섹션 표시
+            showPhilosopherThumbnails(topPhilosophers);
+            
             // 학습 섹션 표시
             showLearningSection();
         }
@@ -1130,6 +1140,58 @@
                     legend.appendChild(legendItem);
                 }
             });
+        }
+
+        function showPhilosopherThumbnails(topPhilosophers) {
+            const container = document.getElementById('philosopher-thumbnails');
+            container.innerHTML = '';
+
+            // 내 결과에 포함되지 않은 철학자들 표시
+            Object.keys(philosophers).forEach(key => {
+                if (!topPhilosophers.includes(key)) {
+                    const philosopher = philosophers[key];
+                    const thumbnail = document.createElement('div');
+                    thumbnail.className = 'philosopher-thumbnail';
+                    thumbnail.style.backgroundImage = `url('${philosopher.image}')`;
+                    thumbnail.setAttribute('data-name', philosopher.name);
+                    thumbnail.onclick = () => openPhilosopherModal(key);
+                    container.appendChild(thumbnail);
+                }
+            });
+        }
+
+        function openPhilosopherModal(philosopherKey) {
+            const philosopher = philosophers[philosopherKey];
+            const description = philosopherDescriptions[philosopherKey];
+            const modal = document.getElementById('philosopher-modal');
+            const content = document.getElementById('modal-philosopher-content');
+
+            content.innerHTML = `
+                <div class="modal-philosopher-image" style="background-image: url('${philosopher.image}');"></div>
+                <h2>${philosopher.emoji} ${philosopher.name}형</h2>
+                <div class="type">"${philosopher.type}"</div>
+                <div class="description">${description.description}</div>
+                <div class="modal-philosopher-quote">
+                    "${description.quote}"
+                </div>
+            `;
+
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('philosopher-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto'; // 스크롤 복원
+        }
+
+        // 모달 바깥쪽 클릭시 닫기
+        window.onclick = function(event) {
+            const modal = document.getElementById('philosopher-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
         }
 
         function showLearningSection() {
