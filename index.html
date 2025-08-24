@@ -56,7 +56,7 @@
             line-height: 1.6;
         }
 
-        .start-btn, .choice-btn, .restart-btn {
+        .start-btn, .choice-btn, .restart-btn, .toggle-btn, .learning-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
@@ -68,7 +68,7 @@
             margin: 10px;
         }
 
-        .start-btn:hover, .restart-btn:hover {
+        .start-btn:hover, .restart-btn:hover, .learning-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
@@ -91,6 +91,35 @@
             color: white;
             border-color: #667eea;
             transform: translateX(5px);
+        }
+
+        .back-btn {
+            background: #cbd5e0;
+            color: #4a5568;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .back-btn:hover {
+            background: #a0aec0;
+            transform: translateY(-1px);
+        }
+
+        .back-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         .progress-bar {
@@ -139,20 +168,33 @@
         }
 
         .philosopher-result {
-            display: flex;
-            align-items: center;
             margin: 30px 0;
             text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 30px;
+        }
+
+        .philosopher-result:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .philosopher-content {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
         }
 
         .philosopher-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
+            width: 180px;
+            height: 180px;
+            border-radius: 15px;
             margin-right: 30px;
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
             border: 4px solid #667eea;
+            flex-shrink: 0;
         }
 
         .philosopher-info h2 {
@@ -172,6 +214,16 @@
             color: #4a5568;
             line-height: 1.6;
             font-size: 1em;
+        }
+
+        .philosopher-quote {
+            font-style: italic;
+            color: #667eea;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
         }
 
         .stats {
@@ -230,33 +282,91 @@
             transform: translateY(-1px);
         }
 
-        .back-btn {
-            background: #cbd5e0;
+        .learning-section {
+            background: #fff5f5;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 2px solid #fed7d7;
+        }
+
+        .my-choices {
+            margin: 20px 0;
+        }
+
+        .choice-review {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .choice-review .dilemma-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .choice-review .my-choice {
             color: #4a5568;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-right: 10px;
-            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .choice-review .explanation {
+            color: #667eea;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .other-choices {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .other-choice {
+            margin: 8px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
             font-size: 0.9em;
         }
 
-        .back-btn:hover {
-            background: #a0aec0;
-            transform: translateY(-1px);
+        .toggle-btn {
+            background: #e53e3e;
+            font-size: 0.9em;
+            padding: 8px 16px;
         }
 
-        .back-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .toggle-btn:hover {
+            background: #c53030;
         }
 
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        @media (max-width: 768px) {
+            .philosopher-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .philosopher-image {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .game-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -287,9 +397,9 @@
         <!-- 결과 화면 -->
         <div id="result-screen" class="game-card hidden">
             <h1 class="title">🎯 당신의 철학적 캐릭터는?</h1>
-            <p class="subtitle">당신이 선택한 14개의 딜레마 속 선택지들을 분석한 결과...</p>
+            <p class="subtitle" id="result-subtitle">당신이 선택한 14개의 딜레마 속 선택지들을 분석한 결과...</p>
             
-            <div class="philosopher-result" id="philosopher-result"></div>
+            <div id="philosopher-results"></div>
             
             <div class="stats" id="choice-stats"></div>
             
@@ -297,6 +407,15 @@
                 <h3 style="margin-bottom: 15px; color: #2d3748;">🧬 당신의 윤리 DNA</h3>
                 <div class="dna-strand" id="dna-strand"></div>
                 <div class="dna-legend" id="dna-legend"></div>
+            </div>
+
+            <div class="learning-section">
+                <h3 style="margin-bottom: 15px; color: #2d3748;">📚 당신의 선택을 다시 살펴볼까요?</h3>
+                <p style="margin-bottom: 20px; color: #4a5568; line-height: 1.5;">
+                    각 딜레마에서 당신이 선택한 답변과 그 철학적 배경을 확인해보세요. 
+                    다른 선택지들은 어떤 철학자의 관점인지도 알아볼 수 있어요!
+                </p>
+                <div class="my-choices" id="my-choices"></div>
             </div>
 
             <div class="share-section">
@@ -310,126 +429,343 @@
     <script>
         // 게임 데이터
         const philosophers = {
-            heidegger: { name: '하이데거', type: '존재를 되묻는 사람', color: '#8B4513', emoji: '🌌', image: 'images/heidegger.png' },
-            marx: { name: '마르크스', type: '구조를 꿰뚫는 사람', color: '#DC143C', emoji: '🔥', image: 'images/marx.png' },
-            mill: { name: '밀', type: '자유를 사랑하는 사람', color: '#32CD32', emoji: '🗽', image: 'images/mill.png' },
-            kant: { name: '칸트', type: '원칙을 지키는 사람', color: '#4169E1', emoji: '🧑‍⚖️', image: 'images/kant.png' },
-            noddings: { name: '나딩스', type: '관계를 돌보는 사람', color: '#FF69B4', emoji: '❤️', image: 'images/noddings.png' },
-            rawls: { name: '롤스', type: '공정함을 설계하는 사람', color: '#9370DB', emoji: '🏛️', image: 'images/rawls.png' },
-            aristotle: { name: '아리스토텔레스', type: '성장을 중시하는 사람', color: '#FF8C00', emoji: '🧠', image: 'images/aristotle.png' }
+            heidegger: { 
+                name: '하이데거', 
+                type: '존재를 되묻는 사람', 
+                color: '#8B4513', 
+                emoji: '🌌', 
+                image: 'images/heidegger.png',
+                keyword: '존재론적 사유'
+            },
+            marx: { 
+                name: '마르크스', 
+                type: '구조를 꿰뚫는 사람', 
+                color: '#DC143C', 
+                emoji: '🔥', 
+                image: 'images/marx.png',
+                keyword: '사회구조 분석'
+            },
+            mill: { 
+                name: '밀', 
+                type: '자유를 사랑하는 사람', 
+                color: '#32CD32', 
+                emoji: '🗽', 
+                image: 'images/mill.png',
+                keyword: '개인의 자유'
+            },
+            kant: { 
+                name: '칸트', 
+                type: '원칙을 지키는 사람', 
+                color: '#4169E1', 
+                emoji: '🧑‍⚖️', 
+                image: 'images/kant.png',
+                keyword: '도덕적 의무'
+            },
+            noddings: { 
+                name: '나딩스', 
+                type: '관계를 돌보는 사람', 
+                color: '#FF69B4', 
+                emoji: '❤️', 
+                image: 'images/noddings.png',
+                keyword: '돌봄과 관계'
+            },
+            rawls: { 
+                name: '롤스', 
+                type: '공정함을 설계하는 사람', 
+                color: '#9370DB', 
+                emoji: '🏛️', 
+                image: 'images/rawls.png',
+                keyword: '사회적 정의'
+            },
+            aristotle: { 
+                name: '아리스토텔레스', 
+                type: '성장을 중시하는 사람', 
+                color: '#FF8C00', 
+                emoji: '🧠', 
+                image: 'images/aristotle.png',
+                keyword: '덕의 함양'
+            }
         };
 
         const dilemmas = [
             {
                 question: "🧬 아이가 부모의 유전자를 선택할 수 있다면 유전자 편집 기술로 외모, 지능, 성격까지 설계 가능하다.",
                 choices: [
-                    { text: "아이가 자기 삶을 직접 만들어가야 한다고 믿어서, 미리 설계하는 건 좀 무서워", philosopher: "kant" },
-                    { text: "이런 기술은 누구에게 허용되는지부터 정해져야 한다고 생각해. 안 그러면 너무 불공평해", philosopher: "rawls" },
-                    { text: "성품은 살아가면서 만들어지는 거라고 믿어. 설계된 덕은 진짜일까 싶어", philosopher: "aristotle" }
+                    { 
+                        text: "아이가 자기 삶을 직접 만들어가야 한다고 믿어서, 미리 설계하는 건 좀 무서워", 
+                        philosopher: "kant",
+                        explanation: "인간의 존엄성과 자율성을 중시하는 칸트의 관점"
+                    },
+                    { 
+                        text: "이런 기술은 누구에게 허용되는지부터 정해져야 한다고 생각해. 안 그러면 너무 불공평해", 
+                        philosopher: "rawls",
+                        explanation: "공정한 기회 배분을 중시하는 롤스의 정의론"
+                    },
+                    { 
+                        text: "성품은 살아가면서 만들어지는 거라고 믿어. 설계된 덕은 진짜일까 싶어", 
+                        philosopher: "aristotle",
+                        explanation: "덕은 경험과 실천을 통해 형성된다는 아리스토텔레스의 덕윤리"
+                    }
                 ]
             },
             {
                 question: "🤖 기계가 인간보다 더 윤리적 판단을 할 때 AI가 인간보다 공정하고 일관된 결정을 내린다.",
                 choices: [
-                    { text: "윤리적 판단은 사람이 직접 해야 한다고 생각해. 아무리 정확해도 기계는 좀 불안해", philosopher: "kant" },
-                    { text: "결과가 더 좋다면, 누가 판단하든 상관없다고 봐. 사람보다 나으면 AI가 해도 괜찮지 않을까", philosopher: "mill" },
-                    { text: "판단이 기술로 바뀌는 순간, 내가 진짜로 살아 있다는 감각이 흐려질 것 같아. 그게 좀 무서워", philosopher: "heidegger" }
+                    { 
+                        text: "윤리적 판단은 사람이 직접 해야 한다고 생각해. 아무리 정확해도 기계는 좀 불안해", 
+                        philosopher: "kant",
+                        explanation: "도덕적 자율성은 인간만의 고유한 능력이라는 칸트의 철학"
+                    },
+                    { 
+                        text: "결과가 더 좋다면, 누가 판단하든 상관없다고 봐. 사람보다 나으면 AI가 해도 괜찮지 않을까", 
+                        philosopher: "mill",
+                        explanation: "결과의 유용성을 중시하는 밀의 공리주의적 사고"
+                    },
+                    { 
+                        text: "판단이 기술로 바뀌는 순간, 내가 진짜로 살아 있다는 감각이 흐려질 것 같아. 그게 좀 무서워", 
+                        philosopher: "heidegger",
+                        explanation: "기술이 인간 존재를 소외시킬 위험을 경고한 하이데거의 사상"
+                    }
                 ]
             },
             {
                 question: "🐾 인간이 동물의 언어를 이해하게 된다면 동물의 고통, 감정, 요구를 직접 듣게 된다.",
                 choices: [
-                    { text: "동물이 말할 수 있다면, 그 말을 듣는 순간부터 나는 책임을 져야 한다고 느낄 것 같아", philosopher: "noddings" },
-                    { text: "동물과 인간의 관계는 사회 구조 속에서 만들어진다고 생각해. 구조를 바꾸지 않으면 억압은 계속될 거야", philosopher: "marx" },
-                    { text: "동물과의 관계도 내가 어떤 사람으로 자라나는 데 중요한 역할을 한다고 믿어", philosopher: "aristotle" }
+                    { 
+                        text: "동물이 말할 수 있다면, 그 말을 듣는 순간부터 나는 책임을 져야 한다고 느낄 것 같아", 
+                        philosopher: "noddings",
+                        explanation: "관계에서 생기는 돌봄의 책임을 강조한 나딩스의 돌봄윤리"
+                    },
+                    { 
+                        text: "동물과 인간의 관계는 사회 구조 속에서 만들어진다고 생각해. 구조를 바꾸지 않으면 억압은 계속될 거야", 
+                        philosopher: "marx",
+                        explanation: "사회 구조와 권력 관계를 통해 현상을 분석하는 마르크스의 방법론"
+                    },
+                    { 
+                        text: "동물과의 관계도 내가 어떤 사람으로 자라나는 데 중요한 역할을 한다고 믿어", 
+                        philosopher: "aristotle",
+                        explanation: "모든 관계와 경험이 덕의 형성에 기여한다는 아리스토텔레스의 관점"
+                    }
                 ]
             },
             {
                 question: "🧠 죽은 사람의 의식을 디지털로 복원한다면 사망자의 기억과 성격을 AI로 복원하는 서비스가 출시된다.",
                 choices: [
-                    { text: "사랑하는 사람을 다시 만날 수 있다면, 진짜가 아니어도 받아들이고 싶어", philosopher: "mill" },
-                    { text: "이런 기술은 사회 전체가 어떻게 받아들일지 먼저 정해진 기준이 있어야 한다고 생각해", philosopher: "rawls" },
-                    { text: "죽음이 삶의 일부라고 믿기 때문에, 이런 기술은 인간다움을 흐릴 것 같아", philosopher: "heidegger" }
+                    { 
+                        text: "사랑하는 사람을 다시 만날 수 있다면, 진짜가 아니어도 받아들이고 싶어", 
+                        philosopher: "mill",
+                        explanation: "개인의 행복과 만족을 중시하는 밀의 공리주의"
+                    },
+                    { 
+                        text: "이런 기술은 사회 전체가 어떻게 받아들일지 먼저 정해진 기준이 있어야 한다고 생각해", 
+                        philosopher: "rawls",
+                        explanation: "사회적 합의와 제도적 정의를 우선시하는 롤스의 접근"
+                    },
+                    { 
+                        text: "죽음이 삶의 일부라고 믿기 때문에, 이런 기술은 인간다움을 흐릴 것 같아", 
+                        philosopher: "heidegger",
+                        explanation: "죽음을 통해 삶의 의미를 찾는다는 하이데거의 존재론적 분석"
+                    }
                 ]
             },
             {
                 question: "🎨 예술가가 전쟁을 미화한 작품을 만들었을 때 작품은 감동적이지만, 전쟁의 참상을 미화한다는 비판이 있다.",
                 choices: [
-                    { text: "예술은 자유롭게 표현되어야 한다고 생각해. 감동을 주는 작품이라면 의미가 있다고 느껴", philosopher: "mill" },
-                    { text: "전쟁으로 상처받은 사람들의 감정을 고려하지 않은 작품은 조심해야 한다고 느껴", philosopher: "noddings" },
-                    { text: "예술이 공동체의 기억과 존엄을 해친다면, 그건 책임져야 한다고 생각해", philosopher: "rawls" }
+                    { 
+                        text: "예술은 자유롭게 표현되어야 한다고 생각해. 감동을 주는 작품이라면 의미가 있다고 느껴", 
+                        philosopher: "mill",
+                        explanation: "사상과 표현의 자유를 옹호한 밀의 자유주의"
+                    },
+                    { 
+                        text: "전쟁으로 상처받은 사람들의 감정을 고려하지 않은 작품은 조심해야 한다고 느껴", 
+                        philosopher: "noddings",
+                        explanation: "타인의 고통에 공감하고 배려하는 나딩스의 돌봄 윤리"
+                    },
+                    { 
+                        text: "예술이 공동체의 기억과 존엄을 해친다면, 그건 책임져야 한다고 생각해", 
+                        philosopher: "rawls",
+                        explanation: "공동체의 가치와 사회적 책임을 중시하는 롤스의 관점"
+                    }
                 ]
             },
             {
                 question: "🌱 기술로 자연을 되살릴 수 있다면 멸종된 동물을 복원하는 기술이 개발된다.",
                 choices: [
-                    { text: "자연을 다룰 때 인간의 태도가 중요하다고 생각해서, 이런 기술은 신중히 써야 한다고 봐", philosopher: "kant" },
-                    { text: "생명이 돈벌이 수단이 된다면, 그건 위험하다고 느껴. 자연도 자본에 종속되는 게 싫어", philosopher: "marx" },
-                    { text: "자연이 다시 살아난다 해도, 그게 인간의 손으로 만들어졌다는 사실이 나를 불편하게 만들어", philosopher: "heidegger" }
+                    { 
+                        text: "자연을 다룰 때 인간의 태도가 중요하다고 생각해서, 이런 기술은 신중히 써야 한다고 봐", 
+                        philosopher: "kant",
+                        explanation: "자연에 대한 인간의 도덕적 태도를 강조한 칸트의 윤리학"
+                    },
+                    { 
+                        text: "생명이 돈벌이 수단이 된다면, 그건 위험하다고 느껴. 자연도 자본에 종속되는 게 싫어", 
+                        philosopher: "marx",
+                        explanation: "자본주의가 모든 것을 상품화한다고 비판한 마르크스의 관점"
+                    },
+                    { 
+                        text: "자연이 다시 살아난다 해도, 그게 인간의 손으로 만들어졌다는 사실이 나를 불편하게 만들어", 
+                        philosopher: "heidegger",
+                        explanation: "기술이 자연의 본질을 왜곡할 수 있다는 하이데거의 기술철학"
+                    }
                 ]
             },
             {
                 question: "💊 감정을 조절하는 칩을 이식한 사람 감정을 억제하면 인간다움은 유지될 수 있을까?",
                 choices: [
-                    { text: "감정은 내가 누군가와 연결되는 방식이라서, 그걸 억제하면 관계도 얕아질 것 같아", philosopher: "noddings" },
-                    { text: "성품은 감정을 다루는 과정에서 생긴다고 믿어. 감정을 없애면 나도 덜 자라게 될 것 같아", philosopher: "aristotle" },
-                    { text: "감정이 너무 극단적일 때는 조절할 수 있는 선택권이 있는 게 오히려 자유롭다고 느껴", philosopher: "mill" }
+                    { 
+                        text: "감정은 내가 누군가와 연결되는 방식이라서, 그걸 억제하면 관계도 얕아질 것 같아", 
+                        philosopher: "noddings",
+                        explanation: "감정이 관계 형성의 기초라고 본 나딩스의 돌봄 윤리"
+                    },
+                    { 
+                        text: "성품은 감정을 다루는 과정에서 생긴다고 믿어. 감정을 없애면 나도 덜 자라게 될 것 같아", 
+                        philosopher: "aristotle",
+                        explanation: "감정의 조절을 통해 덕이 형성된다는 아리스토텔레스의 덕윤리"
+                    },
+                    { 
+                        text: "감정이 너무 극단적일 때는 조절할 수 있는 선택권이 있는 게 오히려 자유롭다고 느껴", 
+                        philosopher: "mill",
+                        explanation: "개인의 선택권과 자기결정권을 중시한 밀의 자유주의"
+                    }
                 ]
             },
             {
                 question: "🧠 기억을 조작한 전쟁 영웅 과거를 지운 병사가 영웅으로 추앙받는다.",
                 choices: [
-                    { text: "진실을 감추고 살아가는 건 옳지 않다고 생각해. 기억을 지우는 건 책임을 피하는 것 같아", philosopher: "kant" },
-                    { text: "권력이 기억을 조작할 수 있다면, 사회 전체가 위험해질 수 있다고 느껴", philosopher: "marx" },
-                    { text: "아무리 새로운 삶을 살아도, 과거가 사라졌다는 사실이 마음을 불편하게 만들어", philosopher: "heidegger" }
+                    { 
+                        text: "진실을 감추고 살아가는 건 옳지 않다고 생각해. 기억을 지우는 건 책임을 피하는 것 같아", 
+                        philosopher: "kant",
+                        explanation: "진실성과 도덕적 책임을 강조한 칸트의 의무윤리"
+                    },
+                    { 
+                        text: "권력이 기억을 조작할 수 있다면, 사회 전체가 위험해질 수 있다고 느껴", 
+                        philosopher: "marx",
+                        explanation: "권력이 역사와 의식을 조작한다고 분석한 마르크스의 이데올로기 비판"
+                    },
+                    { 
+                        text: "아무리 새로운 삶을 살아도, 과거가 사라졌다는 사실이 마음을 불편하게 만들어", 
+                        philosopher: "heidegger",
+                        explanation: "과거와의 단절이 존재의 진정성을 해친다는 하이데거의 시간론"
+                    }
                 ]
             },
             {
                 question: "🤖 로봇이 인간의 노동을 대체할 때 인간의 노동은 점점 사라지고, 일의 의미도 달라진다.",
                 choices: [
-                    { text: "일은 내가 어떤 사람으로 자라나는 과정이라고 생각해. 그걸 잃는 건 아쉬워", philosopher: "aristotle" },
-                    { text: "로봇이 일을 대신해도 사람들이 더 행복해질 수 있다면 괜찮다고 봐", philosopher: "mill" },
-                    { text: "노동이 자본의 이익만을 위해 재편되면, 사람은 점점 주변으로 밀려나는 것 같아", philosopher: "marx" }
+                    { 
+                        text: "일은 내가 어떤 사람으로 자라나는 과정이라고 생각해. 그걸 잃는 건 아쉬워", 
+                        philosopher: "aristotle",
+                        explanation: "활동을 통한 자기실현을 중시한 아리스토텔레스의 인간관"
+                    },
+                    { 
+                        text: "로봇이 일을 대신해도 사람들이 더 행복해질 수 있다면 괜찮다고 봐", 
+                        philosopher: "mill",
+                        explanation: "전체 행복의 증진을 목표로 하는 밀의 공리주의"
+                    },
+                    { 
+                        text: "노동이 자본의 이익만을 위해 재편되면, 사람은 점점 주변으로 밀려나는 것 같아", 
+                        philosopher: "marx",
+                        explanation: "자본주의적 생산관계에서 인간 소외를 분석한 마르크스의 노동론"
+                    }
                 ]
             },
             {
                 question: "🕶️ 가상현실 속에서만 살아가는 삶 현실보다 더 만족스러운 가상세계에 머무는 사람들.",
                 choices: [
-                    { text: "덕을 기르려면 현실에서 부딪히고 선택하는 경험이 필요하다고 생각해", philosopher: "aristotle" },
-                    { text: "현실이 너무 고통스럽다면, 가상세계에서라도 평온함을 느끼는 게 나쁘지 않다고 봐", philosopher: "mill" },
-                    { text: "가상세계에 오래 머물다 보면, 내가 진짜로 존재하고 있다는 감각이 흐려질 것 같아", philosopher: "heidegger" }
+                    { 
+                        text: "덕을 기르려면 현실에서 부딪히고 선택하는 경험이 필요하다고 생각해", 
+                        philosopher: "aristotle",
+                        explanation: "실제 경험을 통한 덕의 함양을 강조한 아리스토텔레스의 실천철학"
+                    },
+                    { 
+                        text: "현실이 너무 고통스럽다면, 가상세계에서라도 평온함을 느끼는 게 나쁘지 않다고 봐", 
+                        philosopher: "mill",
+                        explanation: "개인의 행복과 고통 경감을 중시하는 밀의 쾌락주의"
+                    },
+                    { 
+                        text: "가상세계에 오래 머물다 보면, 내가 진짜로 존재하고 있다는 감각이 흐려질 것 같아", 
+                        philosopher: "heidegger",
+                        explanation: "진정한 존재와 일상의 도피를 구분한 하이데거의 존재론"
+                    }
                 ]
             },
             {
                 question: "🎭 AI가 예술을 창작할 수 있다면 AI가 감동적인 음악과 그림을 창작한다.",
                 choices: [
-                    { text: "감동을 줄 수 있다면, 사람이 만든 게 아니어도 괜찮다고 생각해", philosopher: "mill" },
-                    { text: "예술이 공동체 안에서 어떤 의미를 갖는지 고민해야 한다고 생각해", philosopher: "rawls" },
-                    { text: "예술은 감정과 경험을 담아내는 과정이라서, 기계가 만든 작품엔 거리감이 느껴져", philosopher: "aristotle" }
+                    { 
+                        text: "감동을 줄 수 있다면, 사람이 만든 게 아니어도 괜찮다고 생각해", 
+                        philosopher: "mill",
+                        explanation: "결과의 가치를 중시하는 밀의 결과주의적 미학관"
+                    },
+                    { 
+                        text: "예술이 공동체 안에서 어떤 의미를 갖는지 고민해야 한다고 생각해", 
+                        philosopher: "rawls",
+                        explanation: "예술의 사회적 역할과 공동체적 가치를 중시하는 롤스의 관점"
+                    },
+                    { 
+                        text: "예술은 감정과 경험을 담아내는 과정이라서, 기계가 만든 작품엔 거리감이 느껴져", 
+                        philosopher: "aristotle",
+                        explanation: "인간의 경험과 감정이 예술의 핵심이라는 아리스토텔레스의 예술론"
+                    }
                 ]
             },
             {
                 question: "🧬 생명을 연장하는 기술이 불평등하게 배분된다면 부유한 사람만 수명을 늘릴 수 있다.",
                 choices: [
-                    { text: "생명은 모두에게 평등하게 주어져야 한다고 생각해. 누군가만 오래 살 수 있다면, 그건 너무 불공평해", philosopher: "rawls" },
-                    { text: "자본이 생명을 결정하는 순간, 사람은 점점 구조 속에서 밀려나는 것 같아", philosopher: "marx" },
-                    { text: "기술이 삶을 늘려줄 수 있다면, 그 자체로 긍정적이라고 봐", philosopher: "mill" }
+                    { 
+                        text: "생명은 모두에게 평등하게 주어져야 한다고 생각해. 누군가만 오래 살 수 있다면, 그건 너무 불공평해", 
+                        philosopher: "rawls",
+                        explanation: "기본적 재화의 공정한 배분을 주장한 롤스의 정의론"
+                    },
+                    { 
+                        text: "자본이 생명을 결정하는 순간, 사람은 점점 구조 속에서 밀려나는 것 같아", 
+                        philosopher: "marx",
+                        explanation: "자본의 논리가 인간 생명까지 지배한다고 본 마르크스의 비판"
+                    },
+                    { 
+                        text: "기술이 삶을 늘려줄 수 있다면, 그 자체로 긍정적이라고 봐", 
+                        philosopher: "mill",
+                        explanation: "기술 발전을 통한 인간 복지 증진을 긍정한 밀의 진보주의"
+                    }
                 ]
             },
             {
                 question: "⚖️ 법은 의도를 처벌할 수 있을까? 폭력적인 생각을 자주 표현하는 사람이 있다. 행동은 없지만, 주변은 위협을 느낀다.",
                 choices: [
-                    { text: "행동이 없었다면 처벌해선 안 된다고 생각해. 법은 생각이 아니라 행위를 다뤄야 하니까", philosopher: "kant" },
-                    { text: "모두가 안전하게 느낄 수 있는 사회가 중요하다고 생각해. 위험을 예방하려면 기준이 필요해", philosopher: "rawls" },
-                    { text: "기술이나 법이 사람의 내면까지 판단하려는 순간, 인간은 감시받는 존재가 되는 것 같아. 그게 불편해", philosopher: "heidegger" }
+                    { 
+                        text: "행동이 없었다면 처벌해선 안 된다고 생각해. 법은 생각이 아니라 행위를 다뤄야 하니까", 
+                        philosopher: "kant",
+                        explanation: "내면의 도덕법칙과 외적 행위를 구분한 칸트의 법철학"
+                    },
+                    { 
+                        text: "모두가 안전하게 느낄 수 있는 사회가 중요하다고 생각해. 위험을 예방하려면 기준이 필요해", 
+                        philosopher: "rawls",
+                        explanation: "사회 안전과 예방적 정의를 중시하는 롤스의 제도적 접근"
+                    },
+                    { 
+                        text: "기술이나 법이 사람의 내면까지 판단하려는 순간, 인간은 감시받는 존재가 되는 것 같아. 그게 불편해", 
+                        philosopher: "heidegger",
+                        explanation: "기술적 관리가 인간성을 위협한다고 본 하이데거의 기술철학"
+                    }
                 ]
             },
             {
                 question: "🏛️ 공공의 안전을 위해 사적 공간을 침해할 수 있을까? 한 아파트 주민이 드론을 띄워 이웃의 베란다를 감시한다. 그는 '우리 모두의 안전을 위한 감시'라고 주장하지만, 이웃은 사생활 침해라고 느낀다.",
                 choices: [
-                    { text: "타인의 동의 없이 사적 공간을 들여다보는 건 존엄을 해치는 일이라고 생각해. 자유에도 책임이 따라야 해", philosopher: "kant" },
-                    { text: "공공장소가 아니라면, 누구든 자기 공간을 지킬 권리가 있다고 봐. 그게 자유의 최소 조건이니까", philosopher: "mill" },
-                    { text: "이런 갈등이 생긴다는 건, 우리가 공공과 사적 기준을 다시 정리해야 한다는 뜻 같아. 그냥 불편함으로 넘길 수는 없어", philosopher: "rawls" }
+                    { 
+                        text: "타인의 동의 없이 사적 공간을 들여다보는 건 존엄을 해치는 일이라고 생각해. 자유에도 책임이 따라야 해", 
+                        philosopher: "kant",
+                        explanation: "인격 존중과 동의의 원칙을 강조한 칸트의 인간 존엄성 이론"
+                    },
+                    { 
+                        text: "공공장소가 아니라면, 누구든 자기 공간을 지킬 권리가 있다고 봐. 그게 자유의 최소 조건이니까", 
+                        philosopher: "mill",
+                        explanation: "타인에게 해를 끼치지 않을 자유의 영역을 옹호한 밀의 자유론"
+                    },
+                    { 
+                        text: "이런 갈등이 생긴다는 건, 우리가 공공과 사적 기준을 다시 정리해야 한다는 뜻 같아. 그냥 불편함으로 넘길 수는 없어", 
+                        philosopher: "rawls",
+                        explanation: "공적-사적 영역의 합리적 구분을 추구한 롤스의 정치철학"
+                    }
                 ]
             }
         ];
@@ -502,13 +838,17 @@
                 const button = document.createElement('button');
                 button.className = 'choice-btn';
                 button.innerHTML = `${index + 1}. ${choice.text}`;
-                button.onclick = () => selectChoice(choice.philosopher);
+                button.onclick = () => selectChoice(choice.philosopher, choice);
                 choicesContainer.appendChild(button);
             });
         }
 
-        function selectChoice(philosopher) {
-            choices.push(philosopher);
+        function selectChoice(philosopher, choiceData) {
+            choices.push({
+                philosopher: philosopher,
+                dilemma: currentDilemma,
+                choice: choiceData
+            });
             currentDilemma++;
             
             // 부드러운 전환 효과
@@ -529,47 +869,70 @@
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
 
-            // 가장 많이 선택된 철학자 계산
+            // 철학자별 선택 횟수 계산
             const counts = {};
             choices.forEach(choice => {
-                counts[choice] = (counts[choice] || 0) + 1;
+                counts[choice.philosopher] = (counts[choice.philosopher] || 0) + 1;
             });
 
-            const dominantPhilosopher = Object.keys(counts).reduce((a, b) => 
-                counts[a] > counts[b] ? a : b
-            );
+            // 최고점 찾기
+            const maxCount = Math.max(...Object.values(counts));
+            const topPhilosophers = Object.keys(counts).filter(key => counts[key] === maxCount);
 
-            const philosopher = philosophers[dominantPhilosopher];
-            const description = philosopherDescriptions[dominantPhilosopher];
+            // 결과 제목 업데이트
+            const subtitle = document.getElementById('result-subtitle');
+            if (topPhilosophers.length > 1) {
+                subtitle.textContent = `당신은 ${topPhilosophers.length}명의 철학자와 동일한 성향을 보였습니다.`;
+            } else {
+                subtitle.textContent = "당신이 선택한 14개의 딜레마 속 선택지들을 분석한 결과...";
+            }
 
             // 결과 표시
-            const resultContainer = document.getElementById('philosopher-result');
-            resultContainer.innerHTML = `
-                <div class="philosopher-image" style="background-image: url('${philosopher.image}'); background-size: cover; background-position: center;">
-                </div>
-                <div class="philosopher-info">
-                    <h2>${philosopher.emoji} ${philosopher.name}형</h2>
-                    <div class="type">"${philosopher.type}"</div>
-                    <div class="description">${description.description}</div>
-                    <div style="margin-top: 15px; font-style: italic; color: #667eea;">
+            const resultsContainer = document.getElementById('philosopher-results');
+            resultsContainer.innerHTML = '';
+
+            topPhilosophers.forEach((philosopherKey, index) => {
+                const philosopher = philosophers[philosopherKey];
+                const description = philosopherDescriptions[philosopherKey];
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'philosopher-result';
+                resultDiv.innerHTML = `
+                    <div class="philosopher-content">
+                        <div class="philosopher-image" style="background-image: url('${philosopher.image}');"></div>
+                        <div class="philosopher-info">
+                            <h2>${philosopher.emoji} ${philosopher.name}형</h2>
+                            <div class="type">"${philosopher.type}"</div>
+                            <div class="description">${description.description}</div>
+                        </div>
+                    </div>
+                    <div class="philosopher-quote">
                         "${description.quote}"
                     </div>
-                </div>
-            `;
+                `;
+                resultsContainer.appendChild(resultDiv);
+            });
 
             // 선택 통계
             const stats = document.getElementById('choice-stats');
-            const dominantCount = counts[dominantPhilosopher];
+            const dominantCount = maxCount;
+            const statsText = topPhilosophers.length > 1 
+                ? `각각 14개 딜레마 중 <strong>${dominantCount}개</strong>씩에서 일치하는 선택을 보였습니다.`
+                : `14개 딜레마 중 <strong>${dominantCount}개</strong>에서 ${philosophers[topPhilosophers[0]].name}의 관점과 일치했습니다.`;
+            
             stats.innerHTML = `
                 <h4 style="margin-bottom: 10px; color: #2d3748;">📊 당신의 선택 패턴</h4>
-                <p>14개 딜레마 중 <strong>${dominantCount}개</strong>에서 ${philosopher.name}의 관점과 일치했습니다.</p>
+                <p>${statsText}</p>
                 <p style="margin-top: 10px; font-size: 0.9em; color: #718096;">
-                    ${generateChoiceInsight(dominantPhilosopher, dominantCount)}
+                    ${generateChoiceInsight(topPhilosophers, dominantCount)}
                 </p>
             `;
 
             // DNA strand 시각화
             showDNAStrand(counts);
+            
+            // 학습 섹션 표시
+            showLearningSection();
         }
 
         function showDNAStrand(counts) {
@@ -606,7 +969,65 @@
             });
         }
 
-        function generateChoiceInsight(dominantPhilosopher, count) {
+        function showLearningSection() {
+            const container = document.getElementById('my-choices');
+            container.innerHTML = '';
+
+            choices.forEach((userChoice, index) => {
+                const dilemma = dilemmas[index];
+                const choiceDiv = document.createElement('div');
+                choiceDiv.className = 'choice-review';
+                
+                const philosopher = philosophers[userChoice.philosopher];
+                const otherChoices = dilemma.choices.filter(c => c.philosopher !== userChoice.philosopher);
+
+                choiceDiv.innerHTML = `
+                    <div class="dilemma-title">📋 딜레마 ${index + 1}: ${dilemma.question.split(' ')[1]} ${dilemma.question.split(' ')[2]}</div>
+                    <div class="my-choice">
+                        <strong>당신의 선택:</strong> "${userChoice.choice.text}"
+                    </div>
+                    <div class="explanation">
+                        → 이는 <strong>${philosopher.name}</strong>의 "${philosopher.keyword}" 관점입니다.<br>
+                        ${userChoice.choice.explanation}
+                    </div>
+                    <button class="toggle-btn" onclick="toggleOtherChoices(${index})">다른 선택지들 보기 ▼</button>
+                    <div class="other-choices hidden" id="other-choices-${index}">
+                        <strong>다른 선택지들은?</strong>
+                        ${otherChoices.map(choice => {
+                            const otherPhil = philosophers[choice.philosopher];
+                            return `
+                                <div class="other-choice">
+                                    <strong>${otherPhil.emoji} ${otherPhil.name}:</strong> "${choice.text}"<br>
+                                    <small style="color: #666;">${choice.explanation}</small>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(choiceDiv);
+            });
+        }
+
+        function toggleOtherChoices(index) {
+            const otherChoices = document.getElementById(`other-choices-${index}`);
+            const button = otherChoices.previousElementSibling;
+            
+            if (otherChoices.classList.contains('hidden')) {
+                otherChoices.classList.remove('hidden');
+                button.innerHTML = '다른 선택지들 숨기기 ▲';
+            } else {
+                otherChoices.classList.add('hidden');
+                button.innerHTML = '다른 선택지들 보기 ▼';
+            }
+        }
+
+        function generateChoiceInsight(topPhilosophers, count) {
+            if (topPhilosophers.length > 1) {
+                const names = topPhilosophers.map(key => philosophers[key].name).join(', ');
+                return `당신은 ${names}의 사상이 조화롭게 섞인 복합적 성향을 가지고 있습니다.`;
+            }
+            
             const insights = {
                 kant: "당신은 일관된 원칙을 바탕으로 판단하는 경향이 강합니다.",
                 mill: "당신은 개인의 자유와 선택권을 매우 중요하게 생각합니다.",
@@ -617,20 +1038,27 @@
                 heidegger: "당신은 존재의 본질과 인간다움에 대해 깊이 사고합니다."
             };
             
-            return insights[dominantPhilosopher] || "";
+            return insights[topPhilosophers[0]] || "";
         }
 
         function shareResult() {
-            const dominantPhilosopher = Object.keys(philosophers).reduce((a, b) => {
-                const countA = choices.filter(c => c === a).length;
-                const countB = choices.filter(c => c === b).length;
-                return countA > countB ? a : b;
+            const counts = {};
+            choices.forEach(choice => {
+                counts[choice.philosopher] = (counts[choice.philosopher] || 0) + 1;
             });
 
-            const philosopher = philosophers[dominantPhilosopher];
-            const count = choices.filter(c => c === dominantPhilosopher).length;
-            
-            const shareText = `🧬 나의 윤리 DNA 결과\n\n${philosopher.emoji} ${philosopher.name}형 - "${philosopher.type}"\n\n14개 딜레마 중 ${count}개에서 ${philosopher.name}의 관점과 일치!\n\n당신의 윤리 DNA는? → [게임 링크]`;
+            const maxCount = Math.max(...Object.values(counts));
+            const topPhilosophers = Object.keys(counts).filter(key => counts[key] === maxCount);
+
+            let shareText;
+            if (topPhilosophers.length > 1) {
+                const names = topPhilosophers.map(key => philosophers[key].name).join(', ');
+                const emojis = topPhilosophers.map(key => philosophers[key].emoji).join('');
+                shareText = `🧬 나의 윤리 DNA 결과\n\n${emojis} ${names}형 (복합)\n\n각각 14개 딜레마 중 ${maxCount}개씩 일치!\n\n당신의 윤리 DNA는? → [게임 링크]`;
+            } else {
+                const philosopher = philosophers[topPhilosophers[0]];
+                shareText = `🧬 나의 윤리 DNA 결과\n\n${philosopher.emoji} ${philosopher.name}형 - "${philosopher.type}"\n\n14개 딜레마 중 ${maxCount}개에서 ${philosopher.name}의 관점과 일치!\n\n당신의 윤리 DNA는? → [게임 링크]`;
+            }
             
             navigator.clipboard.writeText(shareText).then(() => {
                 alert('결과가 복사되었습니다! 친구들과 공유해보세요 🎉');
@@ -654,7 +1082,7 @@
                 const choiceIndex = parseInt(e.key) - 1;
                 const dilemma = dilemmas[currentDilemma];
                 if (dilemma && dilemma.choices[choiceIndex]) {
-                    selectChoice(dilemma.choices[choiceIndex].philosopher);
+                    selectChoice(dilemma.choices[choiceIndex].philosopher, dilemma.choices[choiceIndex]);
                 }
             }
         });
