@@ -1280,10 +1280,12 @@
             if (topPhilosophers.length > 1) {
                 const names = topPhilosophers.map(key => philosophers[key].name).join(', ');
                 const emojis = topPhilosophers.map(key => philosophers[key].emoji).join('');
-                shareText = `🧬 나의 윤리 DNA 결과\n\n${emojis} ${names}형 (복합)\n\n각각 14개 딜레마 중 ${maxCount}개씩 일치!\n\n당신의 윤리 DNA는? → [게임 링크]`;
+                // shareText = `🧬 나의 윤리 DNA 결과\n\n${emojis} ${names}형 (복합)\n\n각각 14개 딜레마 중 ${maxCount}개씩 일치!\n\n당신의 윤리 DNA는? → [게임 링크]`;
+                shareText = `🧬 나의 윤리 DNA 결과\n\n${philosopher.emoji} ${philosopher.name}형 - "${philosopher.type}"\n\n14개 딜레마 중 ${maxCount}개에서 ${philosopher.name}의 관점과 일치!\n\n당신의 윤리 DNA는? → [게임 링크](https://86redhd-maker.github.io/ethicsDNA/)`;
             } else {
                 const philosopher = philosophers[topPhilosophers[0]];
-                shareText = `🧬 나의 윤리 DNA 결과\n\n${philosopher.emoji} ${philosopher.name}형 - "${philosopher.type}"\n\n14개 딜레마 중 ${maxCount}개에서 ${philosopher.name}의 관점과 일치!\n\n당신의 윤리 DNA는? → [게임 링크]`;
+                // shareText = `🧬 나의 윤리 DNA 결과\n\n${philosopher.emoji} ${philosopher.name}형 - "${philosopher.type}"\n\n14개 딜레마 중 ${maxCount}개에서 ${philosopher.name}의 관점과 일치!\n\n당신의 윤리 DNA는? → [게임 링크]`;
+                shareText = `🧬 나의 윤리 DNA 결과\n\n${philosopher.emoji} ${philosopher.name}형 - "${philosopher.type}"\n\n14개 딜레마 중 ${maxCount}개에서 ${philosopher.name}의 관점과 일치!\n\n당신의 윤리 DNA는? → [게임 링크](https://86redhd-maker.github.io/ethicsDNA/)`;
             }
             
             navigator.clipboard.writeText(shareText).then(() => {
@@ -1315,3 +1317,4 @@
     </script>
 </body>
 </html>
+
